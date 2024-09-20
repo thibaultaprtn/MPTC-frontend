@@ -10,10 +10,16 @@ import { GlobalContextProvider } from "./context/GlobalContext";
 
 //Import des pages
 import Home from "./pages/Home";
-import Private from "./pages/private";
+import Dashboard from "./pages/dashboard";
+import CreateGame from "./pages/createGame.jsx";
+
+//Import des pages admin
+import AdminDashboard from "./pages/admin/adminDashboard.jsx";
+import AddCandidate from "./pages/admin/addCandidate.jsx";
 
 //Import des composants
 import ProtectedRoute from "./components/protectedRoute";
+import AdminRoute from "./components/adminRoute.jsx";
 
 //Import du CSS
 import "./App.css";
@@ -23,15 +29,31 @@ function App() {
     <>
       <GlobalContextProvider>
         <Router>
-          <Link to={"/private"}>To private</Link>
+          {/* <Link to={"/dashboard"}>To Dashboard</Link> */}
           <Routes>
             <Route path="/" element={<Home />} />
             <Route
-              path="/private"
+              path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <Private />
+                  <Dashboard />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admindashboard"
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              }
+            />
+            <Route
+              path="/addcandidate"
+              element={
+                <AdminRoute>
+                  <AddCandidate />
+                </AdminRoute>
               }
             />
           </Routes>

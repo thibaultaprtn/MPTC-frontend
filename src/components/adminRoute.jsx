@@ -3,10 +3,10 @@ import { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { FIREBASE_AUTH } from "../FirebaseConfig";
 
-const ProtectedRoute = ({ children }) => {
+const AdminRoute = ({ children }) => {
   //On pourrait utiliser le user provenant de Firebase plutot ?
-  const { user } = useContext(GlobalContext);
-  return user ? children : <Navigate to="/"></Navigate>;
+  const { user, isAdmin } = useContext(GlobalContext);
+  return user && isAdmin ? children : <Navigate to="/"></Navigate>;
 };
 
-export default ProtectedRoute;
+export default AdminRoute;

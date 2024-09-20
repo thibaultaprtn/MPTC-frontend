@@ -15,7 +15,9 @@ export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
   const auth = FIREBASE_AUTH;
-  const [user, setUser] = useState(auth.currentUser); // L'initialisation va se fait dans le useEffect initial ?
+  const [user, setUser] = useState(auth.currentUser);
+  const [userMongoId, setUserMongoId] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [loading, setLoading] = useState(false);
 
@@ -31,12 +33,12 @@ export const GlobalContextProvider = ({ children }) => {
           username: username,
         }
       );
-      // const firebaseresponse = await createUserWithEmailAndPassword(
-      //   auth,
-      //   email,
-      //   password
-      // );
-      // console.log("reponse de firebase", firebaseresponse);
+      const firebaseresponse = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("reponse de firebase", firebaseresponse);
       console.log("reponse du serveur", serverresponse.data.message);
       // console.log("reponse du serveur", serverresponse.data.message);
       // console.log(response);
@@ -54,6 +56,12 @@ export const GlobalContextProvider = ({ children }) => {
     setLoading(true);
     try {
       const response = await signInWithEmailAndPassword(auth, email, password);
+      // const responseIdfromServer = await axios.get(
+      //   `${import.meta.env.VITE_BACKURL}/user/idfromemail`,
+      //   { params: { email: email } }
+      // );
+      // console.log("reponse de l'Id du serveur", responseIdfromServer);
+      // setUserMongoId(responseIdfromServer.data.userMongoId);
       console.log(response);
       console.log("sign in successfull");
       //   alert("Check your emails !");
@@ -77,17 +85,29 @@ export const GlobalContextProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
+        // console.log(user.email);
+        const responseIdfromServer = await axios.get(
+          `${import.meta.env.VITE_BACKURL}/user/idfromemail`,
+          { params: { email: user.email } }
+        );
+        // console.log("reponse de l'Id du serveur", responseIdfromServer);
+        setUserMongoId(responseIdfromServer.data.userMongoId);
+        setIsAdmin(responseIdfromServer.data.isAdmin);
         setIsFetching(false);
         return;
       }
       setUser(null);
+      setUserMongoId(null);
+      setIsAdmin(false);
       setIsFetching(false);
     });
     return unsubscribe;
   }, []);
+
+  // console.log("userMongoId", userMongoId);
 
   return (
     <>
@@ -95,7 +115,15 @@ export const GlobalContextProvider = ({ children }) => {
         <p>Loading</p>
       ) : (
         <GlobalContext.Provider
-          value={{ user, loading, signIn, signUp, logOut }}
+          value={{
+            user,
+            userMongoId,
+            isAdmin,
+            loading,
+            signIn,
+            signUp,
+            logOut,
+          }}
         >
           {children}
         </GlobalContext.Provider>

@@ -17,9 +17,9 @@ const Home = () => {
 
   useEffect(() => {
     const usernametemp = username;
-    console.log("usernametemp", usernametemp);
+    // console.log("usernametemp", usernametemp);
     const emailtemp = email;
-    console.log("emailtemp", emailtemp);
+    // console.log("emailtemp", emailtemp);
     const fetchdata = async (req, res) => {
       try {
         const attributeddata = await axios.get(
@@ -28,9 +28,11 @@ const Home = () => {
             params: { username: usernametemp, email: emailtemp },
           }
         );
-        console.log(attributeddata.data);
+        // console.log(attributeddata.data);
         setValidEmail(attributeddata.data.email);
         setValidUsername(attributeddata.data.username);
+        setSignable(attributeddata.data.email && attributeddata.data.username);
+        // console.log("setSignable", signable);
         // console.log("data", data);
         // datausername ? setValidUsername(false) : setValidUsername(true);
         // dataemail ? setValidEmail(false) : setEmail(true);
@@ -67,10 +69,12 @@ const Home = () => {
 
   const handlePasswordChange = (event) => setPassword(event.target.value);
 
+  // console.log(signable);
+
   return (
     <>
       {user ? (
-        <Navigate to="/private"></Navigate>
+        <Navigate to="/dashboard"></Navigate>
       ) : (
         <>
           {loading ? (
@@ -127,7 +131,7 @@ const Home = () => {
                     type="button"
                     title="CreateAccount"
                     onClick={() => {
-                      signUp(auth, email, username, password);
+                      signable && signUp(auth, email, username, password);
                     }}
                   >
                     Create Account
