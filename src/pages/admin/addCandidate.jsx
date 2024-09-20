@@ -11,7 +11,7 @@ const AddCandidate = () => {
   });
 
   const [pictures, setPictures] = useState(null);
-  // const [isWaiting, setIsWaiting] = useState(false);
+  const [isWaiting, setIsWaiting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ const AddCandidate = () => {
       // console.log("formData==>", formData);
 
       const response = await axios.post(
-        `${backurl}/candidate/create`,
+        `${import.meta.env.VITE_BACKURL}/candidate/create`,
         formData,
         {
           headers: {
@@ -39,7 +39,7 @@ const AddCandidate = () => {
         }
       );
 
-      console.log(response);
+      console.log(response.data);
 
       // navigate(`/offer/${response.data._id}`);
     } catch (error) {
@@ -49,7 +49,6 @@ const AddCandidate = () => {
     }
   };
 
-  const handleNameChange = (event) => setName(event.target.value);
   return (
     <>
       <div
@@ -60,14 +59,62 @@ const AddCandidate = () => {
         }}
       >
         <p>Ajout d'un candidat</p>
-        <form>
+        <form onSubmit={handleSubmit}>
+          <label id="publishpicinput" htmlFor="picture-input">
+            Ajoute ta photo
+          </label>
+          <input
+            id="picture-input"
+            style={{ flexShrink: 0, display: "none" }}
+            type="file"
+            multiple="multiple"
+            onChange={(event) => {
+              // console.log(
+              //   "type of event.target.files",
+              //   typeof event.target.files
+              // );
+              // console.log(
+              //   "est ce que event.target.files est un tableau ?",
+              //   Array.isArray(event.target.files)
+              // );
+              // console.log(event.target.files);
+              // console.log(event.target.files);
+              // console.log(event.target.files[0]);
+              // const tab = [...event.target.files];
+              setPictures(event.target.files);
+              // console.log(typeof pictures);
+            }}
+          />
+
           <label htmlFor="candidate_name"></label>
           <input
             id="candidate_name"
-            value={name}
+            value={body.name}
             type="text"
-            onChange={handleNameChange}
+            placeholder="Nom du candidat"
+            onChange={(event) => {
+              const tab = { ...body };
+              tab.name = event.target.value;
+              setBody(tab);
+            }}
           />
+
+          <label htmlFor="candidate_description"></label>
+          <textarea
+            id="candidate_description"
+            value={body.description}
+            placeholder="Description du candidat"
+            type="text"
+            onChange={(event) => {
+              const tab = { ...body };
+              tab.description = event.target.value;
+              setBody(tab);
+            }}
+          />
+
+          {/* disable={isWaiting} */}
+
+          <button type="submit">Soumettre</button>
         </form>
       </div>
     </>
