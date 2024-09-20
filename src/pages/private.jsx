@@ -5,8 +5,8 @@ import { FIREBASE_AUTH } from "../FirebaseConfig";
 const Private = () => {
   const auth = FIREBASE_AUTH;
   const { logOut, user } = useContext(GlobalContext);
-  console.log(user.email);
-  console.log(auth.currentUser.email);
+  // console.log(user.email);
+  // console.log(auth.currentUser.email);
 
   return (
     <div>

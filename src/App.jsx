@@ -1,3 +1,6 @@
+//Commentaires
+//Les routes peuvent être protégée par le composant Protected Route
+
 //Import du package de router et des hooks
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -14,8 +17,6 @@ import ProtectedRoute from "./components/protectedRoute";
 
 //Import du CSS
 import "./App.css";
-
-//Import des configurations Firebae
 
 function App() {
   return (

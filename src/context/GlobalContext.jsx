@@ -9,6 +9,8 @@ import {
   signOut,
 } from "firebase/auth";
 
+import axios from "axios";
+
 export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
@@ -17,18 +19,28 @@ export const GlobalContextProvider = ({ children }) => {
   const [isFetching, setIsFetching] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  const signUp = async (auth, email, password) => {
-    if (!email || !password) return;
+  const signUp = async (auth, email, username, password) => {
+    if (!email || !password || !username) return;
     setLoading(true);
     console.log(email, password);
     try {
-      const response = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
+      const serverresponse = await axios.post(
+        `${import.meta.env.VITE_BACKURL}/user/signup`,
+        {
+          email: email,
+          username: username,
+        }
       );
-      console.log(response);
-      alert("Check your emails !");
+      // const firebaseresponse = await createUserWithEmailAndPassword(
+      //   auth,
+      //   email,
+      //   password
+      // );
+      // console.log("reponse de firebase", firebaseresponse);
+      console.log("reponse du serveur", serverresponse.data.message);
+      // console.log("reponse du serveur", serverresponse.data.message);
+      // console.log(response);
+      // alert("Check your emails !");
     } catch (error) {
       console.log(error.message);
       alert("Sign up failed" + error.message);
