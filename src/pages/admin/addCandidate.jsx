@@ -8,6 +8,7 @@ const AddCandidate = () => {
   const [changed, setChanged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [body, setBody] = useState({
+    surname: "",
     name: "",
     description: "",
     performances: [],
@@ -28,13 +29,14 @@ const AddCandidate = () => {
     setIsLoading(false);
   }, [changed]);
 
-  console.log(candidates);
+  // console.log(candidates);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsWaiting(true);
     try {
       const formData = new FormData();
+      formData.append("surname", body.surname);
       formData.append("name", body.name);
       formData.append("description", body.description);
 
@@ -117,6 +119,19 @@ const AddCandidate = () => {
             }}
           />
 
+          <label htmlFor="candidate_surname"></label>
+          <input
+            id="candidate_surname"
+            value={body.surname}
+            type="text"
+            placeholder="Prénom du candidat"
+            onChange={(event) => {
+              const tab = { ...body };
+              tab.surname = event.target.value;
+              setBody(tab);
+            }}
+          />
+
           <label htmlFor="candidate_name"></label>
           <input
             id="candidate_name"
@@ -148,16 +163,34 @@ const AddCandidate = () => {
           <button type="submit">Rajouter Candidat</button>
         </form>
       </div>
-      <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: 20,
+          flexWrap: "wrap",
+        }}
+      >
         {candidates.map((elem) => {
           return (
-            <div key={elem._id}>
-              <p>{elem.can_name}</p>
-              <p>{elem.can_description}</p>
+            <div
+              key={elem._id}
+              style={{
+                width: 250,
+                height: 340,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>
+                <span>{elem.can_surname}</span> <span>{elem.can_name}</span>
+              </p>
+              <p style={{ textAlign: "justify" }}>{elem.can_description}</p>
               <img
                 src={elem.can_pics[0].secure_url}
                 alt={elem.can_name}
-                style={{ height: 200 }}
+                style={{ width: 250, height: 200, objectFit: "contain" }}
               />
             </div>
           );
