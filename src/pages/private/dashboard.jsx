@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { GlobalContext } from "../context/GlobalContext";
-import { FIREBASE_AUTH } from "../FirebaseConfig";
+import { GlobalContext } from "../../context/GlobalContext";
+import { FIREBASE_AUTH } from "../../FirebaseConfig";
 // import ProtectedRoute from "../components/protectedRoute";
 // On peut protéger les routes au sein même des pages
 

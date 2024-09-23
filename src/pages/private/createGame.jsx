@@ -1,12 +1,19 @@
 import { useState, useEffect, useContext } from "react";
-import { GlobalContext } from "../context/GlobalContext";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const CreateGame = () => {
-  const { userMongoId } = useContext(GlobalContext);
+  const { userMongoId, token, user } = useContext(GlobalContext);
   const [gameName, setGameName] = useState("");
   const [numberOfTeams, setNumberOfTeams] = useState(2);
   const [numberOfCandidatesPerTeam, setNumberOfCandidatesPerTeam] = useState(4);
 
+  const handleSubmit = (event) => {
+    //La requête dans axios doit avoir
+    // headers: {
+    //   Authorization: "Bearer " + idtoken,
+    //   email: (user.email||""),
+    // },
+  };
   const handleGameNameChange = (event) => setGameName(event.target.value);
   const handleNumberOfTeamsChange = (event) =>
     setNumberOfTeams(event.target.value);

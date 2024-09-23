@@ -3,7 +3,10 @@ import { GlobalContext } from "../../context/GlobalContext";
 import axios from "axios";
 
 const AddCandidate = () => {
-  const { userMongoId } = useContext(GlobalContext);
+  const { userMongoId, token, user } = useContext(GlobalContext);
+  const [candidates, setCandidates] = useState([]);
+  const [changed, setChanged] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [body, setBody] = useState({
     name: "",
     description: "",
@@ -12,6 +15,20 @@ const AddCandidate = () => {
 
   const [pictures, setPictures] = useState(null);
   const [isWaiting, setIsWaiting] = useState(false);
+
+  useEffect(() => {
+    const fetchcandidates = async () => {
+      const candidateslist = await axios.get(
+        `${import.meta.env.VITE_BACKURL}/candidate/list`
+      );
+      // console.log(candidateslist);
+      setCandidates(candidateslist.data);
+    };
+    fetchcandidates();
+    setIsLoading(false);
+  }, [changed]);
+
+  console.log(candidates);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,8 +50,10 @@ const AddCandidate = () => {
         formData,
         {
           headers: {
-            Authorization: userMongoId,
+            AdminHeader: userMongoId,
             "Content-Type": "multipart/form-data",
+            Authorization: "Bearer " + token,
+            email: user.email,
           },
         }
       );
@@ -43,8 +62,10 @@ const AddCandidate = () => {
 
       // navigate(`/offer/${response.data._id}`);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
+      alert(error.response.data.message);
     } finally {
+      setChanged(!changed);
       setIsWaiting(false);
     }
   };
@@ -55,11 +76,21 @@ const AddCandidate = () => {
         style={{
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <p>Ajout d'un candidat</p>
-        <form onSubmit={handleSubmit}>
+        <p style={{ paddingTop: 30, paddingBottom: 30 }}>Ajout d'un candidat</p>
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 20,
+          }}
+        >
           <label id="publishpicinput" htmlFor="picture-input">
             Ajoute ta photo
           </label>
@@ -114,9 +145,25 @@ const AddCandidate = () => {
 
           {/* disable={isWaiting} */}
 
-          <button type="submit">Soumettre</button>
+          <button type="submit">Rajouter Candidat</button>
         </form>
       </div>
+      <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+        {candidates.map((elem) => {
+          return (
+            <div key={elem._id}>
+              <p>{elem.can_name}</p>
+              <p>{elem.can_description}</p>
+              <img
+                src={elem.can_pics[0].secure_url}
+                alt={elem.can_name}
+                style={{ height: 200 }}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <>{isLoading ? <p>Chargement</p> : <div></div>}</>
     </>
   );
 };
