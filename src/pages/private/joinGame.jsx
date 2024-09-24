@@ -37,20 +37,24 @@ const JoinGame = () => {
     // event.preventDefault();
     try {
       console.log(number);
-      // const response = await axios.put(
-      //   `${import.meta.env.VITE_BACKURL}/game/addplayer`,
-      //   {
-      //     params: {
-      //       team_number: number,
-      //       user_id: userMongoId,
-      //     },
-      //     headers: {
-      //       Authorization: "Bearer " + token,
-      //       email: user.email || "",
-      //     },
-      //   }
-      // );
-    } catch (error) {}
+      const response = await axios.put(
+        `${import.meta.env.VITE_BACKURL}/game/join`,
+        {
+          game_id: gameId,
+          team_number: number,
+          user_id: userMongoId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            email: user.email || "",
+          },
+        }
+      );
+      console.log(response.data.message);
+    } catch (error) {
+      console.log(error.message);
+    }
   };
 
   const handleGameIdChange = (event) => setGameId(event.target.value);

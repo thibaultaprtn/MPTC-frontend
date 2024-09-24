@@ -15,6 +15,7 @@ export const GlobalContext = createContext();
 
 export const GlobalContextProvider = ({ children }) => {
   const auth = FIREBASE_AUTH;
+  // console.log(auth.currentUser);
   const [user, setUser] = useState(auth.currentUser);
   const [userMongoId, setUserMongoId] = useState(null);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -100,7 +101,7 @@ export const GlobalContextProvider = ({ children }) => {
           //Si le changement de statut correspond à une authentification, on a un profil user (équivalent userCredentials)
           //On récupère les infos firebase du user, et son token
           //Remarque : le token est redondant avec le use. Je le garde quand même à part pour gérer plus clairement les requêtes
-          setUser(user);
+
           const idtoken = await user.getIdToken();
           // console.log("onAuthStateChanged : idToken ====>", idtoken);
           // console.log(
@@ -130,6 +131,7 @@ export const GlobalContextProvider = ({ children }) => {
           setUserMongoId(responseIdfromServer.data.userMongoId);
           setIsAdmin(responseIdfromServer.data.isAdmin);
           setIsFetching(false);
+          setUser(user);
           return;
         }
         setToken(null);

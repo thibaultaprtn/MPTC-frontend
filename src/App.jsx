@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 import { GlobalContextProvider } from "./context/GlobalContext";
 
 //Import des pages
-import Home from "./pages/Home";
+import Home from "./pages/home.jsx";
 import Dashboard from "./pages/private/dashboard.jsx";
 import CreateGame from "./pages/private/createGame.jsx";
 import JoinGame from "./pages/private/joinGame.jsx";
