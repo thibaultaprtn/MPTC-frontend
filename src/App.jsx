@@ -13,6 +13,7 @@ import Home from "./pages/home.jsx";
 import Dashboard from "./pages/private/dashboard.jsx";
 import CreateGame from "./pages/private/createGame.jsx";
 import JoinGame from "./pages/private/joinGame.jsx";
+import Game from "./pages/private/game.jsx";
 
 //Import des pages admin
 import AdminDashboard from "./pages/admin/adminDashboard.jsx";
@@ -54,6 +55,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <JoinGame />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/game/:id"
+              element={
+                <ProtectedRoute>
+                  <Game />
                 </ProtectedRoute>
               }
             />

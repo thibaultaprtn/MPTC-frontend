@@ -130,7 +130,7 @@ export const GlobalContextProvider = ({ children }) => {
 
           setUserMongoId(responseIdfromServer.data.userMongoId);
           setIsAdmin(responseIdfromServer.data.isAdmin);
-          setIsFetching(false);
+          // setIsFetching(false);
           setUser(user);
           return;
         }
@@ -138,9 +138,11 @@ export const GlobalContextProvider = ({ children }) => {
         setUser(null);
         setUserMongoId(null);
         setIsAdmin(false);
-        setIsFetching(false);
+        // setIsFetching(false);
       } catch (error) {
         res.status(500).json({ message: error.message });
+      } finally {
+        setIsFetching(false);
       }
     });
     return unsubscribe;

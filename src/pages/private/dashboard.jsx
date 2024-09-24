@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
 import { FIREBASE_AUTH } from "../../FirebaseConfig";
 import axios from "axios";
+import { Link } from "react-router-dom";
 // import ProtectedRoute from "../components/protectedRoute";
 // On peut protéger les routes au sein même des pages
 
@@ -53,9 +54,9 @@ const Dashboard = () => {
         {games.map((elem) => {
           return (
             elem.launched && (
-              <p key={elem._id}>
+              <Link key={elem._id} to={`/game/${elem._id}`}>
                 {elem.game_name} {userTeamNumber[elem._id]}
-              </p>
+              </Link>
             )
           );
         })}
@@ -65,10 +66,9 @@ const Dashboard = () => {
         {games.map((elem) => {
           return (
             !elem.launched && (
-              <p key={elem._id}>
-                {elem.game_name}
-                {userTeamNumber[elem._id]}
-              </p>
+              <Link key={elem._id} to={`/game/${elem._id}`}>
+                {elem.game_name} {userTeamNumber[elem._id]}
+              </Link>
             )
           );
         })}

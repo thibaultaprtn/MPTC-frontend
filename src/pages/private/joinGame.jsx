@@ -1,8 +1,10 @@
 import { useState, useContext } from "react";
 import { GlobalContext } from "../../context/GlobalContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const JoinGame = () => {
+  const navigate = useNavigate();
   const { userMongoId, token, user } = useContext(GlobalContext);
   const [gameId, setGameId] = useState("");
   const [gameDetails, setGameDetails] = useState({});
@@ -52,6 +54,7 @@ const JoinGame = () => {
         }
       );
       console.log(response.data.message);
+      // navigate()
     } catch (error) {
       console.log(error.message);
     }
