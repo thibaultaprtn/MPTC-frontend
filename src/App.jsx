@@ -12,6 +12,7 @@ import { GlobalContextProvider } from "./context/GlobalContext";
 import Home from "./pages/Home";
 import Dashboard from "./pages/private/dashboard.jsx";
 import CreateGame from "./pages/private/createGame.jsx";
+import JoinGame from "./pages/private/joinGame.jsx";
 
 //Import des pages admin
 import AdminDashboard from "./pages/admin/adminDashboard.jsx";
@@ -45,6 +46,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CreateGame />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/joingame"
+              element={
+                <ProtectedRoute>
+                  <JoinGame />
                 </ProtectedRoute>
               }
             />

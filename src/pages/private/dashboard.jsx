@@ -10,6 +10,7 @@ const Dashboard = () => {
   const { logOut, user, isAdmin, userMongoId, token } =
     useContext(GlobalContext);
   const [games, setGames] = useState([]);
+  const [userTeamNumber, setUserTeamNumber] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   // console.log(useContext(GlobalContext));
   // console.log(user.email);
@@ -31,8 +32,10 @@ const Dashboard = () => {
           },
         }
       );
-      // console.log(fetchedgames.data);
-      setGames(fetchedgames.data);
+      // console.log("fetchedgames", fetchedgames.data);
+      // console.log("testing", fetchedgames.data.user_team_number);
+      setGames(fetchedgames.data.gameslist);
+      setUserTeamNumber(fetchedgames.data.user_team_number);
     };
     fetchgames();
     setIsLoading(false);
@@ -48,14 +51,32 @@ const Dashboard = () => {
       <p>Tes parties</p>
       <>
         {games.map((elem) => {
-          return !elem.launchable && <p key={elem._id}>{elem.game_name}</p>;
+          return (
+            elem.launched && (
+              <p key={elem._id}>
+                {elem.game_name} {userTeamNumber[elem._id]}
+              </p>
+            )
+          );
         })}
       </>
       <p>Tes parties en attente</p>
+      <>
+        {games.map((elem) => {
+          return (
+            !elem.launched && (
+              <p key={elem._id}>
+                {elem.game_name}
+                {userTeamNumber[elem._id]}
+              </p>
+            )
+          );
+        })}
+      </>
 
       <a href="/creategame">Créer une partie</a>
+      <a href="/joingame">Rejoindre une partie</a>
       {isAdmin && <a href="/admindashboard">Accéder au dashboard admin</a>}
-      <p>Rejoindre une partie</p>
 
       <p>You are already logged in</p>
       <p></p>
