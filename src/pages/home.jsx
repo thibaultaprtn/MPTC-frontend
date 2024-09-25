@@ -13,7 +13,7 @@ const Home = () => {
   const [validEmail, setValidEmail] = useState(true);
   const [signable, setSignable] = useState(true);
   const auth = FIREBASE_AUTH;
-  const [isSignUpActive, setIsSignUpActive] = useState(true);
+  const [isSignUpActive, setIsSignUpActive] = useState(false);
 
   useEffect(() => {
     const usernametemp = username;

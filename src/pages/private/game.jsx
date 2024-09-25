@@ -18,6 +18,7 @@ const Game = () => {
   const [mercato, setMercato] = useState([]);
   const [total, setTotal] = useState(0);
   const { id } = useParams();
+  const [maxBet, setMaxBet] = useState(20);
   //   console.log(id);
 
   useEffect(() => {
@@ -28,14 +29,17 @@ const Game = () => {
     for (let i = 0; i < mercato.length; i++) {
       totaltemp = totaltemp + mercato[i].bet;
     }
-    console.log(totaltemp);
+    // console.log(totaltemp);
     setTotal(totaltemp);
   }, [mercato]);
 
   const addCandidate = (candidate) => {
+    if (total >= maxBet) {
+      return;
+    }
     const newMercato = [...mercato];
     const exist = newMercato.find((elem) => elem._id === candidate._id);
-    console.log("le candidat est déjà ajouté au mercato :", exist);
+    // console.log("le candidat est déjà ajouté au mercato :", exist);
     if (exist) {
       exist.bet++;
       setMercato(newMercato);
@@ -75,6 +79,45 @@ const Game = () => {
   const handleLaunchGame = async () => {};
   const handleDisplayCandidates = () => {};
 
+  const handleSubmitBets = async (mercato) => {
+    try {
+      if (mercato.length === 0) {
+        return alert("Tu n'as pas choisi de candidats");
+      } else if (total < 20) {
+        return alert("Il te reste des crédits à utiliser !");
+      } else {
+        let bets = {};
+        mercato.sort(function (a, b) {
+          return b.bet - a.bet;
+        });
+        for (let i = 0; i < mercato.length; i++) {
+          bets[mercato[i]._id] = mercato[i].bet;
+        }
+        // console.log(bets);
+        bets.time = Date.now();
+        const response = await axios.put(
+          `${import.meta.env.VITE_BACKURL}/game/placebet`,
+          { bets: bets, user_id: userMongoId, game_id: id },
+          {
+            headers: {
+              Authorization: "Bearer " + token,
+              email: user.email || "",
+            },
+          }
+        );
+        console.log(response);
+        //Il faut faire un objet que l'on va venir push dans le fichier de partie
+        //Il faut qu'on le rajoute dans le bet de l'équipe correspondante
+        //Pas besoin de mettre le round, on pourra y avoir accès via l'index car on push dans le dossier
+        //Il faut passer le draft a true
+        //Changer ce que l'on affiche sur la page : Mettre les infos du dernier bet
+        //Indiquer que l'on doit attendre que les autres fassent leurs enchères.
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   //TODO Il faut différencier deux cas :
   //Lors de la requête, si jamais la partie n'est pas encore lancée, il faut récupérer uniquement les infos générales de la partie sans les différents bet
 
@@ -108,8 +151,15 @@ const Game = () => {
           }
         );
         // console.log(userData.data.games.includes(id));
-        console.log(game.data.available_candidates);
+        // console.log(game.data.available_candidates);
         // console.log(userData.data);
+        if (!game.data.launched) {
+          setMaxBet(
+            (game.data.nb_candidates_team -
+              game.data.team[0].candidates.length) *
+              10
+          );
+        }
         setUserDetails(userData.data);
         setGameDetails(game.data);
         setIsAuthorized(userData.data.games.includes(id));
@@ -194,7 +244,7 @@ const Game = () => {
                   {/* Composant Mercato / Equivalent du panier dans deliverro */}
 
                   <h2>Tes enchères</h2>
-                  <p>Total : {total}</p>
+                  <p>Crédit restant : {maxBet - total}</p>
                   <div style={{ display: "flex" }}>
                     {mercato
                       .sort(function (a, b) {
@@ -233,6 +283,13 @@ const Game = () => {
                         );
                       })}
                   </div>
+                  <button
+                    onClick={() => {
+                      handleSubmitBets(mercato);
+                    }}
+                  >
+                    Valider les enchères
+                  </button>
                 </>
               )}
             </div>
