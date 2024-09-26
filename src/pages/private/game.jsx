@@ -16,10 +16,68 @@ const Game = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(true);
   const [mercato, setMercato] = useState([]);
+  const [maxBet, setMaxBet] = useState(20);
+  const [changed, setChanged] = useState(true);
   const [total, setTotal] = useState(0);
   const { id } = useParams();
-  const [maxBet, setMaxBet] = useState(20);
+
   //   console.log(id);
+
+  useEffect(() => {
+    console.log(changed);
+    const fetchgame = async () => {
+      try {
+        const game = await axios.get(
+          `${import.meta.env.VITE_BACKURL}/game/dashboard`,
+          {
+            params: {
+              game_id: id,
+              user_id: userMongoId,
+            },
+            headers: {
+              Authorization: "Bearer " + token,
+              email: user.email || "",
+            },
+          }
+        );
+        console.log(game);
+        // console.log("game.data", game.data);
+        const userData = await axios.get(
+          `${import.meta.env.VITE_BACKURL}/user/`,
+          {
+            params: {
+              user_id: userMongoId,
+            },
+            headers: {
+              Authorization: "Bearer " + token,
+              email: user.email || "",
+            },
+          }
+        );
+        // console.log(userData.data.games.includes(id));
+        // console.log(game.data.available_candidates);
+        // console.log(userData.data);
+        if (!game.data.launched) {
+          setMaxBet(
+            (game.data.nb_candidates_team -
+              game.data.team[0].candidates.length) *
+              10
+          );
+        }
+        console.log(game.data);
+        setUserDetails(userData.data);
+        setGameDetails(game.data);
+        setIsAuthorized(userData.data.games.includes(id));
+        setIsLoading(false);
+      } catch (error) {
+        navigate("/");
+        console.log(error.message);
+      }
+    };
+    fetchgame();
+    // setIsAuthorized(userDetails.games.includes(id));
+    // setIsAuthorized(userDetails.games.includes(id));
+  }, [changed]);
 
   useEffect(() => {
     let totaltemp = 0;
@@ -76,14 +134,34 @@ const Game = () => {
     setMercato(newMercato);
   };
 
-  const handleLaunchGame = async () => {};
+  const handleLaunchGame = async () => {
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_BACKURL}/game/launch`,
+        {
+          game_id: id,
+          user_id: userMongoId,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+            email: user.email || "",
+          },
+        }
+      );
+      setChanged(!changed);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   const handleDisplayCandidates = () => {};
 
   const handleSubmitBets = async (mercato) => {
     try {
       if (mercato.length === 0) {
         return alert("Tu n'as pas choisi de candidats");
-      } else if (total < 20) {
+      } else if (total < maxBet) {
         return alert("Il te reste des crédits à utiliser !");
       } else {
         let bets = {};
@@ -106,6 +184,7 @@ const Game = () => {
           }
         );
         console.log(response);
+        setChanged(!changed);
         //Il faut faire un objet que l'on va venir push dans le fichier de partie
         //Il faut qu'on le rajoute dans le bet de l'équipe correspondante
         //Pas besoin de mettre le round, on pourra y avoir accès via l'index car on push dans le dossier
@@ -120,59 +199,6 @@ const Game = () => {
 
   //TODO Il faut différencier deux cas :
   //Lors de la requête, si jamais la partie n'est pas encore lancée, il faut récupérer uniquement les infos générales de la partie sans les différents bet
-
-  useEffect(() => {
-    const fetchgame = async () => {
-      try {
-        const game = await axios.get(
-          `${import.meta.env.VITE_BACKURL}/game/dashboard`,
-          {
-            params: {
-              game_id: id,
-              user_id: userMongoId,
-            },
-            headers: {
-              Authorization: "Bearer " + token,
-              email: user.email || "",
-            },
-          }
-        );
-        // console.log("game.data", game.data);
-        const userData = await axios.get(
-          `${import.meta.env.VITE_BACKURL}/user/`,
-          {
-            params: {
-              user_id: userMongoId,
-            },
-            headers: {
-              Authorization: "Bearer " + token,
-              email: user.email || "",
-            },
-          }
-        );
-        // console.log(userData.data.games.includes(id));
-        // console.log(game.data.available_candidates);
-        // console.log(userData.data);
-        if (!game.data.launched) {
-          setMaxBet(
-            (game.data.nb_candidates_team -
-              game.data.team[0].candidates.length) *
-              10
-          );
-        }
-        setUserDetails(userData.data);
-        setGameDetails(game.data);
-        setIsAuthorized(userData.data.games.includes(id));
-        setIsLoading(false);
-      } catch (error) {
-        navigate("/");
-        console.log(error.message);
-      }
-    };
-    fetchgame();
-    // setIsAuthorized(userDetails.games.includes(id));
-    // setIsAuthorized(userDetails.games.includes(id));
-  }, []);
 
   //   console.log(isAuthorized);
 
@@ -189,15 +215,25 @@ const Game = () => {
           ) : (
             <p>La partie n'est pas encore démarée</p>
           )}
-          {gameDetails.launchable ? (
-            <p>La partie est prête à être lancée</p>
-          ) : (
-            <p>Le mercato n'est pas encore fini !</p>
-          )}
+
+          {!gameDetails.launched &&
+            (gameDetails.launchable ? (
+              <p>La partie est prête à être lancée</p>
+            ) : (
+              <p>Le mercato n'est pas encore fini !</p>
+            ))}
+
           {/* N'afficher le bouton que si l'ID est celui de l'admin de la partie */}
-          <button disabled={!gameDetails.launchable} onClick={handleLaunchGame}>
-            Lancer la partie
-          </button>
+          {!gameDetails.launched && (
+            <button
+              disabled={
+                !gameDetails.launchable || gameDetails.admin_id !== userMongoId
+              }
+              onClick={handleLaunchGame}
+            >
+              Lancer la partie
+            </button>
+          )}
 
           {/* Ne fonctionne pas dans le cas ou on n'est pas dans de la draft car on renvoie plusieurs teams et pas uniquement la notre */}
 
@@ -213,6 +249,13 @@ const Game = () => {
                   </p>
                 );
               })}
+
+              {gameDetails.team[0].draft && !gameDetails.team[0].full && (
+                <p>
+                  Tu as placé tes enchères, attends que les autres joueurs
+                  valident les leurs
+                </p>
+              )}
 
               {!gameDetails.team[0].draft && !gameDetails.team[0].full && (
                 <>
@@ -245,7 +288,7 @@ const Game = () => {
 
                   <h2>Tes enchères</h2>
                   <p>Crédit restant : {maxBet - total}</p>
-                  <div style={{ display: "flex" }}>
+                  <div style={{ display: "flex", gap: 10 }}>
                     {mercato
                       .sort(function (a, b) {
                         return b.bet - a.bet;
@@ -263,6 +306,7 @@ const Game = () => {
                               }}
                             />
                             <p>{mercatoItem.can_surname}</p>
+                            <p style={{ fontSize: 8 }}>{mercatoItem._id}</p>
                             <p>Bet : {mercatoItem.bet}</p>
                             <FaPlus
                               onClick={() => {
@@ -286,12 +330,46 @@ const Game = () => {
                   <button
                     onClick={() => {
                       handleSubmitBets(mercato);
+                      // setChanged(!changed);
                     }}
                   >
                     Valider les enchères
                   </button>
                 </>
               )}
+
+              {/* TODO Il faut changer ce display parce que cela correspond à une partie qui n'est pas lancée*/}
+
+              {gameDetails.team[0].full && (
+                <p>
+                  {" "}
+                  Ta brigade est au complet ! Attends que les autres joueurs
+                  finissent de compléteter les leurs et que l'admin lance la
+                  partie !
+                </p>
+              )}
+
+              <div>
+                <p>Les candidats de ta brigade</p>
+                <div style={{ display: "flex", flexDirection: "row" }}>
+                  {gameDetails.team[0].candidates.map((elem) => {
+                    return (
+                      <div key={elem._id}>
+                        <p key={elem._id}>{elem.can_surname}</p>
+                        <img
+                          src={elem.can_pics[0].secure_url}
+                          alt=""
+                          style={{
+                            width: 75,
+                            height: 75,
+                            objectFit: "contain",
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
         </div>
