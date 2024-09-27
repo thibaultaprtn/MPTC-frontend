@@ -6,9 +6,37 @@ const AdminDashboard = () => {
   useEffect(() => {}, []);
   return (
     <div>
-      <h2>Bienvenue sur la page d'admin</h2>
-      <a href="/addcandidate">Rajouter un candidat</a>
-      <a href="/">Rajouter une épreuve</a>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: 100,
+        }}
+      >
+        <h1>ADMIN DASHBOARD</h1>
+      </div>
+      <div
+        className="container"
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          gap: 20,
+        }}
+      >
+        <h2 className="gamedescription">ACTIONS :</h2>
+        <a
+          style={{ textAlign: "center" }}
+          className="dashboardaction"
+          href="/addcandidate"
+        >
+          Rajouter un candidat
+        </a>
+        <a style={{ textAlign: "center" }} className="dashboardaction" href="/">
+          Rajouter une épreuve
+        </a>
+      </div>
     </div>
   );
 };

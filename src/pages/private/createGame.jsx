@@ -40,45 +40,78 @@ const CreateGame = () => {
 
   return (
     <>
-      <h2>Créer une partie</h2>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          height: 100,
         }}
       >
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="game_name">Nom de la partie</label>
-          <input
-            id="game_name"
-            value={gameName}
-            placeholder="Nom de la partie"
-            type="text"
-            onChange={handleGameNameChange}
-          />
-          <label htmlFor="number_of_teams">
-            Nombre d'équipes dans la partie
-          </label>
-          <input
-            id="number_of_teams"
-            value={numberOfTeams}
-            placeholder="Nombre d'équipes participant à la partie"
-            type="number"
-            onChange={handleNumberOfTeamsChange}
-          />
-          <label htmlFor="number_of_candidates_per_team">
-            Nombre de candidats par équipe
-          </label>
-          <input
-            id="number_of_candidates_per_team"
-            value={numberOfCandidatesPerTeam}
-            placeholder="Nombre de candidats par brigade"
-            type="number"
-            onChange={handleNumberOfCandidatesPerTeamChange}
-          />
-          <button type="submit">Créer la partie</button>
-        </form>
+        <h1>Créer une nouvelle partie</h1>
+      </div>
+      <div className="container">
+        <div
+          style={{
+            marginTop: 30,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <form
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 15,
+            }}
+            onSubmit={handleSubmit}
+          >
+            <label htmlFor="game_name">Nom de la partie</label>
+            <input
+              style={{ textAlign: "center", height: 30 }}
+              className="logininput"
+              id="game_name"
+              value={gameName}
+              placeholder=""
+              type="text"
+              onChange={handleGameNameChange}
+            />
+            <label htmlFor="number_of_teams">
+              Nombre d'équipes dans la partie
+            </label>
+            <input
+              style={{ textAlign: "center", height: 30 }}
+              className="logininput"
+              id="number_of_teams"
+              value={numberOfTeams}
+              placeholder="Nombre d'équipes participant à la partie"
+              type="number"
+              onChange={handleNumberOfTeamsChange}
+            />
+            <label htmlFor="number_of_candidates_per_team">
+              Nombre de candidats par équipe
+            </label>
+            <input
+              style={{ textAlign: "center", height: 30 }}
+              className="logininput"
+              id="number_of_candidates_per_team"
+              value={numberOfCandidatesPerTeam}
+              placeholder="Nombre de candidats par brigade"
+              type="number"
+              onChange={handleNumberOfCandidatesPerTeamChange}
+            />
+            <button
+              style={{ marginTop: 30 }}
+              className="placebetbutton"
+              type="submit"
+            >
+              Créer la partie
+            </button>
+          </form>
+        </div>
       </div>
     </>
   );

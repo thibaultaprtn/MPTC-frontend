@@ -384,7 +384,7 @@ const Game = () => {
               {/* TODO Il faut changer ce display parce que cela correspond à une partie qui n'est pas lancée*/}
 
               {gameDetails.team[0].full && (
-                <p>
+                <p className="gamedescription">
                   {" "}
                   Ta brigade est au complet ! Attends que les autres joueurs
                   finissent de compléteter les leurs et que l'admin lance la
@@ -394,11 +394,21 @@ const Game = () => {
 
               <div>
                 <p className="gamedescription">Les candidats de ta brigade :</p>
-                <div style={{ display: "flex", flexDirection: "row" }}>
+                <div
+                  style={{
+                    marginTop: 10,
+                    marginBottom: 10,
+                    display: "flex",
+                    gap: 15,
+                    flexWrap: "wrap",
+                  }}
+                >
                   {gameDetails.team[0].candidates.map((elem) => {
                     return (
-                      <div key={elem._id}>
-                        <p key={elem._id}>{elem.can_surname}</p>
+                      <div
+                        className="hovercursor gamecandidatedisplay"
+                        key={elem._id}
+                      >
                         <img
                           src={elem.can_pics[0].secure_url}
                           alt=""
@@ -408,6 +418,7 @@ const Game = () => {
                             objectFit: "contain",
                           }}
                         />
+                        <p key={elem._id}>{elem.can_surname}</p>
                       </div>
                     );
                   })}
@@ -415,6 +426,7 @@ const Game = () => {
               </div>
             </div>
           )}
+          <div style={{ height: 200 }}></div>
         </div>
       ) : (
         <Navigate to="/" />
