@@ -47,46 +47,90 @@ const Dashboard = () => {
   return (
     // <ProtectedRoute>
     <div>
-      <p>Dashboard</p>
-
-      <p>Tes parties</p>
-      <>
-        {games.map((elem) => {
-          return (
-            elem.launched && (
-              <Link key={elem._id} to={`/game/${elem._id}`}>
-                {elem.game_name} {userTeamNumber[elem._id]}
-              </Link>
-            )
-          );
-        })}
-      </>
-      <p>Tes parties en attente</p>
-      <>
-        {games.map((elem) => {
-          return (
-            !elem.launched && (
-              <Link key={elem._id} to={`/game/${elem._id}`}>
-                {elem.game_name} {userTeamNumber[elem._id]}
-              </Link>
-            )
-          );
-        })}
-      </>
-
-      <a href="/creategame">Créer une partie</a>
-      <a href="/joingame">Rejoindre une partie</a>
-      {isAdmin && <a href="/admindashboard">Accéder au dashboard admin</a>}
-
-      <p>You are already logged in</p>
-      <p></p>
-      <button
-        onClick={() => {
-          logOut(auth);
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: 100,
         }}
       >
-        Logout
-      </button>
+        <h1>DASHBOARD</h1>
+      </div>
+      <div className="container">
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 20,
+            marginBottom: 60,
+          }}
+        >
+          <h2>TES PARTIES :</h2>
+          <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+            {games.map((elem) => {
+              return (
+                elem.launched && (
+                  <Link
+                    className="dashboardgamelink"
+                    key={elem._id}
+                    to={`/game/${elem._id}`}
+                  >
+                    <p>{elem.game_name}</p>
+                    <p>Team {userTeamNumber[elem._id]}</p>
+                  </Link>
+                )
+              );
+            })}
+          </div>
+          <h2>TES PARTIES EN ATTENTE :</h2>
+          <div style={{ display: "flex", flexDirection: "row", gap: 20 }}>
+            {games.map((elem) => {
+              return (
+                !elem.launched && (
+                  <Link
+                    className="dashboardgamelink"
+                    key={elem._id}
+                    to={`/game/${elem._id}`}
+                  >
+                    <p>{elem.game_name}</p>
+                    <p>Team {userTeamNumber[elem._id]}</p>
+                  </Link>
+                )
+              );
+            })}
+          </div>
+        </div>
+        <h2 style={{ marginBottom: 20 }}>ACTIONS :</h2>
+        <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+          <a className="dashboardaction" href="/creategame">
+            Créer une partie
+          </a>
+          <a className="dashboardaction" href="/joingame">
+            Rejoindre une partie
+          </a>
+          {isAdmin && (
+            <a
+              style={{ textAlign: "center" }}
+              className="dashboardaction"
+              href="/admindashboard"
+            >
+              Accéder au dashboard admin
+            </a>
+          )}
+
+          {/* <p>You are already logged in</p>
+          <p></p> */}
+          <button
+            className="logoutbutton"
+            onClick={() => {
+              logOut(auth);
+            }}
+          >
+            Se déconnecter
+          </button>
+        </div>
+      </div>
     </div>
     // </ProtectedRoute>
   );

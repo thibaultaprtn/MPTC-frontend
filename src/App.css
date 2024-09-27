@@ -1,3 +1,183 @@
 .hovercursor:hover {
   cursor: pointer;
 }
+
+* {
+  font-family: Roboto, sans-serif;
+  background-color: black;
+  color: white;
+}
+
+legend {
+  font-family: Roboto;
+  font-size: 25px;
+  margin: 10px 0px;
+}
+
+.logindiv {
+  border: 5px solid #191919;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.logininput {
+  border: none;
+  border-bottom: 1px solid #757575;
+  /* border-radius: 5px; */
+}
+
+.logininput:focus {
+  background-color: black;
+  color: white;
+}
+
+.loginbutton {
+  margin: 30px 0px;
+  width: 130px;
+  height: 50px;
+  border: 2px solid #474747;
+  background-color: #474747;
+  border-radius: 5px;
+}
+
+.loginbutton:hover {
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+a {
+  font-family: Roboto;
+}
+
+a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+h1 {
+  font-family: Roboto;
+  font-size: 40px;
+}
+
+.container {
+  width: 80vw;
+  margin: 0 auto;
+}
+
+p {
+  font-family: Roboto;
+}
+
+h2 {
+  font-family: Roboto;
+  font-size: 25px;
+}
+
+.dashboardgamelink {
+  text-decoration: none;
+  padding: 20px;
+  border: 1px solid white;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.dashboardgamelink:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.dashboardaction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  border: 1px solid white;
+  border-radius: 5px;
+  text-decoration: none;
+}
+.dashboardaction:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.logoutbutton {
+  margin: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  border: 1px solid #aa0000;
+  border-radius: 5px;
+  text-decoration: none;
+  background-color: #aa0000;
+}
+
+.logoutbutton:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.gamedescription {
+  margin: 10px 0;
+}
+
+.launchgamebutton {
+  width: 150px;
+  height: 50px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid #474747;
+  background-color: #474747;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+h3 {
+  margin: 20px 0 10px 0;
+  font-family: Roboto;
+  font-size: 20px;
+}
+
+.gamecandidatedisplay {
+  padding: 5px;
+  flex: 0;
+  width: 80px;
+  height: auto;
+  border: 1px solid white;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.placebetbutton {
+  width: 120px;
+  height: 50px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid #474747;
+  background-color: #474747;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.placebetbutton:hover {
+  cursor: pointer;
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+li {
+  font-family: Roboto;
+}

@@ -13,7 +13,7 @@ const Home = () => {
   const [validEmail, setValidEmail] = useState(true);
   const [signable, setSignable] = useState(true);
   const auth = FIREBASE_AUTH;
-  const [isSignUpActive, setIsSignUpActive] = useState(false);
+  const [isSignUpActive, setIsSignUpActive] = useState(true);
 
   useEffect(() => {
     const usernametemp = username;
@@ -81,90 +81,139 @@ const Home = () => {
             <p>Chargement</p>
           ) : (
             <>
-              <div>Login Page</div>
-              <form>
-                {isSignUpActive && <legend> Sign Up </legend>}
-                {!isSignUpActive && <legend> Sign In </legend>}
-                <label htmlFor="email"></label>
-                <input
-                  id="email"
-                  value={email}
-                  type="email"
-                  placeholder="email"
-                  onChange={handleEmailChange}
-                />
-                <p
-                  hidden={isSignUpActive && validEmail}
-                  style={{ color: "red" }}
-                >
-                  Email déjà attribué
-                </p>
-                {isSignUpActive && (
-                  <>
-                    <label htmlFor="Username"></label>
-                    <input
-                      id="Username"
-                      value={username}
-                      type="text"
-                      placeholder="Username"
-                      onChange={handleUsernameChange}
-                    />
-                    <p
-                      hidden={isSignUpActive && validUsername}
-                      style={{ color: "red" }}
-                    >
-                      Username déjà attribué
-                    </p>
-                  </>
-                )}
-                <label htmlFor="password"></label>
-                <input
-                  id="password"
-                  value={password}
-                  type="password"
-                  placeholder="password"
-                  onChange={handlePasswordChange}
-                />
-
-                {isSignUpActive && (
-                  <button
-                    type="button"
-                    title="CreateAccount"
-                    onClick={() => {
-                      signable && signUp(auth, email, username, password);
-                    }}
-                  >
-                    Create Account
-                  </button>
-                )}
-                {!isSignUpActive && (
-                  <button
-                    type="button"
-                    title="CreateAccount"
-                    onClick={() => {
-                      signIn(auth, email, password);
-                    }}
-                  >
-                    Login
-                  </button>
-                )}
-
-                <button
-                  title="Logout"
-                  onClick={() => {
-                    logOut(auth);
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 200,
+                }}
+              >
+                <h1>MON PETIT TOP CHEF</h1>
+              </div>
+              <div
+                style={{
+                  // height: "100vh",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  className="logindiv"
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 10,
                   }}
                 >
-                  Log out
-                </button>
-              </form>
+                  <form
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: 15,
+                    }}
+                  >
+                    {isSignUpActive && <legend> INSCRIS TOI </legend>}
+                    {!isSignUpActive && <legend> CONNECTE TOI </legend>}
+                    <label htmlFor="email"></label>
+                    <input
+                      className="logininput"
+                      id="email"
+                      value={email}
+                      type="email"
+                      placeholder="Email"
+                      onChange={handleEmailChange}
+                    />
+                    <p
+                      hidden={isSignUpActive && validEmail}
+                      style={{ color: "red" }}
+                    >
+                      Email déjà attribué
+                    </p>
+                    {isSignUpActive && (
+                      <>
+                        <label htmlFor="Username"></label>
+                        <input
+                          className="logininput"
+                          id="Username"
+                          value={username}
+                          type="text"
+                          placeholder="Nom d'utilisateur"
+                          onChange={handleUsernameChange}
+                        />
+                        <p
+                          hidden={isSignUpActive && validUsername}
+                          style={{ color: "red" }}
+                        >
+                          Username déjà attribué
+                        </p>
+                      </>
+                    )}
+                    <label htmlFor="password"></label>
+                    <input
+                      className="logininput"
+                      id="password"
+                      value={password}
+                      type="password"
+                      placeholder="Mot de passe"
+                      onChange={handlePasswordChange}
+                    />
 
-              <p>current user :</p>
-              <p>{user?.email}</p>
-              {isSignUpActive && <a onClick={handleMethodChange}>Log in</a>}
-              {!isSignUpActive && (
-                <a onClick={handleMethodChange}>Create an Account</a>
-              )}
+                    {isSignUpActive && (
+                      <button
+                        className="loginbutton"
+                        type="button"
+                        title="CreateAccount"
+                        onClick={() => {
+                          signable && signUp(auth, email, username, password);
+                        }}
+                      >
+                        CRÉER UN COMPTE
+                      </button>
+                    )}
+                    {!isSignUpActive && (
+                      <button
+                        className="loginbutton"
+                        type="button"
+                        title="CreateAccount"
+                        onClick={() => {
+                          signIn(auth, email, password);
+                        }}
+                      >
+                        LOGIN
+                      </button>
+                    )}
+
+                    {/* <button
+                      title="Logout"
+                      onClick={() => {
+                        logOut(auth);
+                      }}
+                    >
+                      Log out
+                    </button> */}
+                  </form>
+
+                  {/* <p>current user :</p>
+                  <p>{user?.email}</p> */}
+                  {isSignUpActive && (
+                    <a onClick={handleMethodChange}>
+                      Tu as déjà un compte ? Connecte toi !
+                    </a>
+                  )}
+                  {!isSignUpActive && (
+                    <a onClick={handleMethodChange}>
+                      Tu n'as pas encore de compte ? Inscris toi !
+                    </a>
+                  )}
+                </div>
+              </div>
             </>
           )}
         </>

@@ -68,6 +68,7 @@ const Game = () => {
         setUserDetails(userData.data);
         setGameDetails(game.data);
         setIsAuthorized(userData.data.games.includes(id));
+        setMercato([]);
         setIsLoading(false);
       } catch (error) {
         navigate("/");
@@ -183,8 +184,10 @@ const Game = () => {
             },
           }
         );
-        console.log(response);
+        console.log("response", response);
+        alert("tu viens de placer tes enchères !");
         setChanged(!changed);
+
         //Il faut faire un objet que l'on va venir push dans le fichier de partie
         //Il faut qu'on le rajoute dans le bet de l'équipe correspondante
         //Pas besoin de mettre le round, on pourra y avoir accès via l'index car on push dans le dossier
@@ -207,25 +210,34 @@ const Game = () => {
       {isLoading ? (
         <p>Chargement</p>
       ) : isAuthorized ? (
-        <div>
-          <p>Partie "{gameDetails.game_name}"</p>
+        <div className="container" style={{ marginTop: 30 }}>
+          <h2 style={{ marginTop: 20, marginBottom: 20 }}>
+            Partie "{gameDetails.game_name}"
+          </h2>
 
           {gameDetails.launched ? (
-            <p>La partie a été lancé</p>
+            <p className="gamedescription">La partie a été lancé</p>
           ) : (
-            <p>La partie n'est pas encore démarée</p>
+            <p className="gamedescription">
+              La partie n'est pas encore démarée
+            </p>
           )}
 
           {!gameDetails.launched &&
             (gameDetails.launchable ? (
-              <p>La partie est prête à être lancée</p>
+              <p className="gamedescription">
+                La partie est prête à être lancée
+              </p>
             ) : (
-              <p>Le mercato n'est pas encore fini !</p>
+              <p className="gamedescription">
+                Le mercato n'est pas encore fini !
+              </p>
             ))}
 
           {/* N'afficher le bouton que si l'ID est celui de l'admin de la partie */}
           {!gameDetails.launched && (
             <button
+              className="launchgamebutton"
               disabled={
                 !gameDetails.launchable || gameDetails.admin_id !== userMongoId
               }
@@ -241,27 +253,36 @@ const Game = () => {
             <div></div>
           ) : (
             <div>
-              <p>Ton équipe :</p>
+              <h3>Ton équipe :</h3>
+              <ul></ul>
               {gameDetails.team[0].users.map((elem) => {
                 return (
-                  <p key={elem._id}>
+                  <li key={elem._id}>
                     {elem.username} {elem._id === userMongoId && "(toi)"}
-                  </p>
+                  </li>
                 );
               })}
 
               {gameDetails.team[0].draft && !gameDetails.team[0].full && (
-                <p>
+                <p style={{ marginBottom: 30, marginTop: 30, fontSize: 20 }}>
                   Tu as placé tes enchères, attends que les autres joueurs
-                  valident les leurs
+                  valident les leurs !
                 </p>
               )}
 
               {!gameDetails.team[0].draft && !gameDetails.team[0].full && (
                 <>
-                  <h2> Choisis ta brigade ! Fais des enchères</h2>
-                  <p>Liste des candidats disponibles</p>
-                  <div style={{ display: "flex" }}>
+                  <h3> Choisis ta brigade ! Fais des enchères :</h3>
+                  <p>Liste des candidats disponibles :</p>
+                  <div
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 10,
+                      display: "flex",
+                      gap: 15,
+                      flexWrap: "wrap",
+                    }}
+                  >
                     {gameDetails.available_candidates.map((elem, index) => {
                       return (
                         <div
@@ -269,13 +290,13 @@ const Game = () => {
                           onClick={() => {
                             addCandidate(elem);
                           }}
-                          className="hovercursor"
+                          className="hovercursor gamecandidatedisplay"
                         >
                           <img
                             src={elem.can_pics[0].secure_url}
                             style={{
                               width: 75,
-                              height: 75,
+                              // height: 75,
                               objectFit: "contain",
                             }}
                           />
@@ -286,16 +307,29 @@ const Game = () => {
                   </div>
                   {/* Composant Mercato / Equivalent du panier dans deliverro */}
 
-                  <h2>Tes enchères</h2>
-                  <p>Crédit restant : {maxBet - total}</p>
-                  <div style={{ display: "flex", gap: 10 }}>
+                  <h3>Tes enchères</h3>
+                  <p className="gamedescription">
+                    Crédit restant : {maxBet - total}
+                  </p>
+                  <div
+                    style={{
+                      marginTop: 10,
+                      marginBottom: 10,
+                      display: "flex",
+                      gap: 15,
+                      flexWrap: "wrap",
+                    }}
+                  >
                     {mercato
                       .sort(function (a, b) {
                         return b.bet - a.bet;
                       })
                       .map((mercatoItem) => {
                         return (
-                          <div key={mercatoItem._id}>
+                          <div
+                            className="hovercursor gamecandidatedisplay"
+                            key={mercatoItem._id}
+                          >
                             <img
                               src={mercatoItem.can_pics[0].secure_url}
                               alt=""
@@ -306,28 +340,37 @@ const Game = () => {
                               }}
                             />
                             <p>{mercatoItem.can_surname}</p>
-                            <p style={{ fontSize: 8 }}>{mercatoItem._id}</p>
+                            {/* <p style={{ fontSize: 8 }}>{mercatoItem._id}</p> */}
                             <p>Bet : {mercatoItem.bet}</p>
-                            <FaPlus
-                              onClick={() => {
-                                addCandidate(mercatoItem);
+                            <div
+                              style={{
+                                display: "flex",
+                                justifyContent: "center",
+                                gap: 2,
                               }}
-                            />
-                            <FaMinus
-                              onClick={() => {
-                                removeCandidate(mercatoItem);
-                              }}
-                            />
-                            <FaTrashCan
-                              onClick={() => {
-                                hardRemoveCandidate(mercatoItem);
-                              }}
-                            />
+                            >
+                              <FaPlus
+                                onClick={() => {
+                                  addCandidate(mercatoItem);
+                                }}
+                              />
+                              <FaMinus
+                                onClick={() => {
+                                  removeCandidate(mercatoItem);
+                                }}
+                              />
+                              <FaTrashCan
+                                onClick={() => {
+                                  hardRemoveCandidate(mercatoItem);
+                                }}
+                              />
+                            </div>
                           </div>
                         );
                       })}
                   </div>
                   <button
+                    className="placebetbutton"
                     onClick={() => {
                       handleSubmitBets(mercato);
                       // setChanged(!changed);
@@ -350,7 +393,7 @@ const Game = () => {
               )}
 
               <div>
-                <p>Les candidats de ta brigade</p>
+                <p className="gamedescription">Les candidats de ta brigade :</p>
                 <div style={{ display: "flex", flexDirection: "row" }}>
                   {gameDetails.team[0].candidates.map((elem) => {
                     return (
